@@ -15,6 +15,8 @@ export class TrackService {
     private fileService: FileService,
   ) {}
 
+  private projection = { __v: false, id: false };
+
   async create(dto: CreateTrackDto, picture, audio): Promise<Track> {
     const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
     const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
@@ -34,14 +36,14 @@ export class TrackService {
         : {};
 
     return await this.trackModel
-      .find(query, { __v: false })
+      .find(query, this.projection)
       .skip(Number(offset))
       .limit(Number(count));
   }
 
   async getOne(trackId: ObjectId): Promise<Track> {
     return await this.trackModel
-      .findById(trackId, { __v: false })
+      .findById(trackId, this.projection)
       .populate('comments');
   }
 

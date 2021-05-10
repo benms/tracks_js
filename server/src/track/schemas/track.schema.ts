@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose';
 
 export type TrackDocument = Track & Document;
 
-@Schema()
+@Schema({ toObject: { virtuals: true }, toJSON: { virtuals: true } })
 export class Track {
   @Prop()
   name: string;
@@ -29,3 +29,9 @@ export class Track {
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);
+TrackSchema.virtual('picture_url').get(function () {
+  return process.env.HOST_URL + '/' + this.picture;
+});
+TrackSchema.virtual('audio_url').get(function () {
+  return process.env.HOST_URL + '/' + this.audio;
+});
